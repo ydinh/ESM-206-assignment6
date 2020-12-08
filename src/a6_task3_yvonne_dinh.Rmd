@@ -4,6 +4,9 @@ author: "Yvonne Dinh"
 date: "12/7/2020"
 output: html_document
 ---
+### Comparison of Desert Grassland and Colorado Checkered female lizard lengths
+
+Introduction: This report uses data on lizards from the Jornada Basin LTER in Southern New Mexico. It compares the mean length of female Desert Grassland and Colorado Checkered lizards using a two-sample t-test and Cohen's d test. 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -38,11 +41,15 @@ liz_simple=lizards %>%
 #create a finalized visualization
 ggplot(liz_simple, aes(x=species, y=total_length))+
   labs(x="Species", y="Lizard Length, mm")+
-  geom_boxplot()
+  geom_boxplot(color="gray39")+
+  geom_beeswarm(color="deeppink3", alpha=0.6)+
+  theme_minimal()
 ```
 
-####Figure 1. Add some text here!
+Figure 1. Boxplot of lizard length for female Colorado Checkered and Desert Grassland lizards. Data: Lightfoot (2017).
 
+
+Table 1. Descriptive statistics (mean, standard deviation, and sample size) for length of female Colorado Checkered and Desert Grassland lizards. Data: Lightfoot (2017).
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #prepare a finalized summary table w/ mean and stdev for total length, sample size, for each species
 liz_table=liz_simple %>%
@@ -53,14 +60,15 @@ liz_table=liz_simple %>%
 #rename columns
 colnames(liz_table)=c("Species", "Mean Length, mm", "Standard Deviation, mm", "Sample Size")
 ```
-```{r}
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
 #kbl to make it nicer looking
 liz_table %>% 
   kbl() %>%
   kable_material(c("hover"))
 ```
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 #exploratory analyses
 
 #histogram
@@ -73,7 +81,8 @@ ggplot(liz_simple, aes(sample=total_length))+
   geom_qq()+
   facet_wrap(~species)
 ```
-```{r}
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 #calculate cohen's d
 cnun_lizards=liz_simple %>% 
   filter(spp == "CNUN") %>% 
@@ -86,6 +95,19 @@ cnte_lizards=liz_simple %>%
   pull(total_length)
 
 cohen.d(cnun_lizards, cnte_lizards)
+
+#t-test too
+tt_liz=t.test(cnun_lizards, cnte_lizards)
+tt_clean=broom::tidy(tt_liz)
+
+#find difference in means
+mean_diff=liz_table[1,2] - liz_table[2,2]
 ```
+
+The actual difference in means between the lengths of female Desert Grassland and Colorado Checkered Lizards is `r round(mean_diff,4)` mm and the effect size using Cohen's d is large at -2.42. After running a two-sample t-test, the p-value is *p* = `r signif(tt_clean$p.value, 2)`, meaning that there is a `r signif(tt_clean$p.value, 4)` probability of getting two sample means with the same mean difference we observed. Since the p-value is really small, it is very unlikely that these samples were drawn from populations with the same mean.
+
+Data Citation:
+
+Lightfoot, D. 2017. Lizard pitfall trap data (LTER-II, LTER-III) ver 36. Environmental Data Initiative. https://doi.org/10.6073/pasta/ff37b4cace16a9943575f3fd7067064e 
 
 
