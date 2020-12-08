@@ -1,0 +1,91 @@
+---
+title: "Task 3"
+author: "Yvonne Dinh"
+date: "12/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(broom)
+library(tibble)
+library(lubridate)
+library(here)
+library(janitor)
+library(kableExtra)
+library(ggbeeswarm)
+library(effsize)
+```
+
+```{r,echo=FALSE, warnings=FALSE, include=FALSE}
+#read in data
+lizards=read.csv(here("data","lizards.csv")) %>% 
+  clean_names()
+
+#simplify and filter the data
+liz_simple=lizards %>% 
+  select(spp, sex, total_length) %>% 
+  filter(sex=="F") %>% 
+  filter(spp %in% c("CNUN", "CNTE")) %>% 
+  mutate(species = case_when(
+    spp=="CNUN" ~ "Desert Grassland Lizard",
+    spp=="CNTE" ~ "Colorado Checkered Lizard")
+  )
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+#create a finalized visualization
+ggplot(liz_simple, aes(x=species, y=total_length))+
+  labs(x="Species", y="Lizard Length, mm")+
+  geom_boxplot()
+```
+
+####Figure 1. Add some text here!
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#prepare a finalized summary table w/ mean and stdev for total length, sample size, for each species
+liz_table=liz_simple %>%
+  group_by(species) %>% 
+  summarize(mean_length=mean(total_length, na.rm = TRUE),
+            sd_length=sd(total_length, na.rm = TRUE), #standard dev
+            n_length=n())
+#rename columns
+colnames(liz_table)=c("Species", "Mean Length, mm", "Standard Deviation, mm", "Sample Size")
+```
+```{r}
+#kbl to make it nicer looking
+liz_table %>% 
+  kbl() %>%
+  kable_material(c("hover"))
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#exploratory analyses
+
+#histogram
+ggplot(liz_simple, aes(x=total_length))+
+  geom_histogram()+
+  facet_wrap (~species)
+
+#qq-plot
+ggplot(liz_simple, aes(sample=total_length))+
+  geom_qq()+
+  facet_wrap(~species)
+```
+```{r}
+#calculate cohen's d
+cnun_lizards=liz_simple %>% 
+  filter(spp == "CNUN") %>% 
+  filter(!is.na(total_length)) %>% 
+  pull(total_length)
+
+cnte_lizards=liz_simple %>%  
+  filter(spp == "CNTE") %>% 
+  filter(!is.na(total_length)) %>% 
+  pull(total_length)
+
+cohen.d(cnun_lizards, cnte_lizards)
+```
+
+

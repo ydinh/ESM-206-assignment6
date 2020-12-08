@@ -1,0 +1,41 @@
+---
+title: "Task 4"
+author: "Yvonne Dinh"
+date: "12/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(broom)
+library(tibble)
+library(lubridate)
+library(here)
+library(janitor)
+library(kableExtra)
+library(ggbeeswarm)
+library(effsize)
+```
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+#read in data
+mono=read.csv(here("data","mono_lake_annual_levels.csv"), skip=5) %>% 
+  clean_names()
+
+#create a data viz
+ggplot(mono, aes(x=year, y=lake_level_feet_above_sea_level))+
+  labs(x="Year",y="Lake Level, feet above sea level", title="Levels at Mono Lake (1850-2017)")+
+  geom_line(color="skyblue3")+
+  theme_minimal()+
+  coord_cartesian(ylim=c(6340, 6430)) +
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 9))+
+  geom_segment(aes(x=1849, xend=2018, y=6350, yend=6350), color="indianred4")+
+  annotate("text", x = 1847.5, y = 6350, label = "3", size=2.5)+
+  geom_segment(aes(x=1849, xend=2018, y=6360, yend=6360), color="indianred3")+
+  annotate("text", x = 1847.5, y = 6360, label = "2", size=2.5)+
+  geom_segment(aes(x=1849, xend=2018, y=6377, yend=6377), color="indianred1")+
+  annotate("text", x = 1847.5, y = 6377, label = "1", size=2.5)+
+  geom_area(fill="lightskyblue", alpha=0.3)
+```
+
+Figure 1. Lake Levels at Mono Lake from 1850 - 2017. Horizontal lines indicate critical lake levels. At Line 1 (6377 feet above sea level), land bridges emerge between the mainland and islands, allowing predators to access bird nesting sites. At Line 2 (6360 feet above sea level), the availability of brine shrimp and brine flies for bird food consumption begin to decrease. At Line 3 (6350 feet above sea level), the availability of brine shrimp and brine flies would be acutely low. 

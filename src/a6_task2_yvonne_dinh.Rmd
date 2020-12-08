@@ -55,8 +55,10 @@ survey_table=survey_simple %>%
   rename ("Political Party" = party) %>% 
   select(1,4,2,3)
 
-kbl(survey_table) %>% 
-  kable_material(c("striped", "hover"))
+#kbl table
+survey_table %>% 
+  kbl() %>%
+  kable_material(c("hover"))
 
 ```
 
