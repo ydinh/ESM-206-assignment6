@@ -106,7 +106,7 @@ mean_diff=liz_table[1,2] - liz_table[2,2]
 
 The actual difference in means between the lengths of female Desert Grassland and Colorado Checkered Lizards is `r round(mean_diff,4)` mm and the effect size using Cohen's d is large at -2.42. After running a two-sample t-test, the p-value is *p* = `r signif(tt_clean$p.value, 2)`, meaning that there is a `r signif(tt_clean$p.value, 4)` probability of getting two sample means with the same mean difference we observed. Since the p-value is really small, it is very unlikely that these samples were drawn from populations with the same mean.
 
-Data Citation:
+Data:
 
 Lightfoot, D. 2017. Lizard pitfall trap data (LTER-II, LTER-III) ver 36. Environmental Data Initiative. https://doi.org/10.6073/pasta/ff37b4cace16a9943575f3fd7067064e 
 
