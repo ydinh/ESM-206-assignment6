@@ -1,0 +1,56 @@
+---
+title: "Task 2"
+author: "Yvonne Dinh"
+date: "12/7/2020"
+output: html_document
+---
+
+```{r setup, message=FALSE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+library(here)
+library(janitor)
+library(kableExtra)
+```
+
+### Introduction
+```{r, echo=FALSE, warnings=FALSE, include=FALSE}
+#read in data
+survey=read.csv(here("data","conservation_survey.csv")) %>% 
+  clean_names()
+
+#keep only the 'ENV_ID' and 'POL_OR' variables
+survey_simple=survey %>% 
+  select(env_id, pol_or)
+
+#add a new column of political parties and get rid of other political affiliations
+survey_simple=survey_simple %>% 
+  mutate(party=case_when(
+    pol_or %in% c("1", "2", "3") ~ "Conservative",
+    pol_or %in% c("5", "6", "7") ~ "Liberal")) %>% 
+  filter(!is.na(party))
+```
+
+Table 1: Counts and proportions of liberal and conservative survey respondents to the statement "I consider myself an environmentalist."
+```{r, warnings = FALSE, echo = FALSE}
+#create a table that shows counts and proportions of survey results
+survey_counts=survey_simple %>% 
+  tabyl(party, env_id)
+
+survey_table=survey_simple %>%
+  tabyl(party, env_id) %>% 
+  rename("Yes"="1",
+         "No"="2",
+         "Unsure"="3") %>% 
+  adorn_percentages() %>% 
+  adorn_pct_formatting(digits=2) %>% 
+  adorn_ns() %>% 
+  rename ("Political Party" = party) %>% 
+  select(1,2,3,4)
+  
+kbl(survey_table) %>% 
+  kable_material(c("striped", "hover"))
+
+```
+
