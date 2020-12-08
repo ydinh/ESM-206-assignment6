@@ -29,12 +29,15 @@ ggplot(mono, aes(x=year, y=lake_level_feet_above_sea_level))+
   theme_minimal()+
   coord_cartesian(ylim=c(6340, 6430)) +
   scale_x_continuous(breaks = scales::pretty_breaks(n = 9))+
+  #add horizontal lines for the lake levels
   geom_segment(aes(x=1849, xend=2018, y=6350, yend=6350), color="indianred4")+
   geom_segment(aes(x=1849, xend=2018, y=6360, yend=6360), color="indianred3")+
   geom_segment(aes(x=1849, xend=2018, y=6377, yend=6377), color="indianred1")+
   geom_area(fill="lightskyblue", alpha=0.3)+
+  #add points of important events
   annotate(geom = "point", x = 1941, y = 6417, shape = 19, size = 1, color = "violetred2")+ #LA DWP began diverting water from Mono Lake to LA
   annotate(geom = "point", x = 1978, y = 6375, shape = 19, size = 1, color = "violetred2")+ #The Mono Lake Committee was founded
+  #add labels too describe events
   geom_label(label="1941: LADWP begins diverting water from Mono Lake to LA", x=1971.5, y=6420.5, size = 2)+
   geom_label(label="1978: The Mono Lake Committee was founded", x=2001, y=6371, size = 2) +
   geom_label(label="6377 ft: Land bridges emerge", x=1867, y=6380, size = 2) +

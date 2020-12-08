@@ -26,7 +26,7 @@ library(effsize)
 lizards=read.csv(here("data","lizards.csv")) %>% 
   clean_names()
 
-#simplify and filter the data
+#simplify and filter the data and create a new column with renamed species names
 liz_simple=lizards %>% 
   select(spp, sex, total_length) %>% 
   filter(sex=="F") %>% 
@@ -38,9 +38,9 @@ liz_simple=lizards %>%
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-#create a finalized visualization
+#create a finalized visualization, i chose a boxplot
 ggplot(liz_simple, aes(x=species, y=total_length))+
-  labs(x="Species", y="Lizard Length, mm")+
+  labs(x="Species", y="Lizard Length, mm", title="Lengths of Female Lizards")+
   geom_boxplot(color="gray39")+
   geom_beeswarm(color="deeppink3", alpha=0.6)+
   theme_minimal()

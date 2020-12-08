@@ -29,7 +29,7 @@ survey=read.csv(here("data","conservation_survey.csv")) %>%
 survey_simple=survey %>% 
   select(env_id, pol_or)
 
-#add a new column of political parties and get rid of other political affiliations
+#add a new column of political parties and environmental response and get rid of other political affiliations
 survey_simple=survey_simple %>% 
   mutate(party=case_when(
     pol_or %in% c("1", "2", "3") ~ "Conservative",
@@ -55,7 +55,7 @@ survey_table=survey_simple %>%
   rename ("Political Party" = party) %>% 
   select(1,4,2,3)
 
-#kbl table
+#final output kbl table
 survey_table %>% 
   kbl() %>%
   kable_material(c("hover"))
@@ -63,8 +63,6 @@ survey_table %>%
 ```
 
 ```{r,echo=FALSE, warnings=FALSE, include=FALSE}
-#convert counts table to a contingency table and preform a chi-square test for independence to answer: is there an association between political affiliation and environmentalism?
-
 #convert counts table to a contingency table
 survey_ct=survey_counts %>% 
   column_to_rownames(var="party")
@@ -72,8 +70,6 @@ survey_ct=survey_counts %>%
 #preform a chi-square test
 survey_chisq=chisq.test(survey_ct)
 survey_tidy=tidy(survey_chisq)
-
-#is there an association between political affiliation and environmentalism? the p-squared value is significant, so we reject the null hypothesis that there is not independence between the two values. 
 
 ```
 
