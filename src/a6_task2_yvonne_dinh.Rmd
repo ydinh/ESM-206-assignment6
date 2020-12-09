@@ -16,9 +16,10 @@ library(janitor)
 library(kableExtra)
 ```
 
-#### Political and Environmental Self-Identification
+## Political and Environmental Self-Identification
 
-Introduction: This analysis uses survey data conducted by Chelsea Batavia and the Andrews Forest LTER in August 2017. It explores the association between survey respondents' political affiliation and whether or not they self-identify as an environmentalist. This will be explored through a chi-square test to analyze if the two responses are independent of each other.
+#### Introduction
+This analysis uses survey data conducted by Chelsea Batavia and the Andrews Forest LTER in August 2017. It explores the association between survey respondents' political affiliation and whether or not they self-identify as an environmentalist. This will be explored through a chi-square test to analyze if the two responses are independent of each other.
 
 ```{r, echo=FALSE, warnings=FALSE, include=FALSE}
 #read in data
@@ -40,6 +41,8 @@ survey_simple=survey_simple %>%
     env_id %in% c("3") ~ "Unsure")) %>% 
   filter(!is.na(party))
 ```
+
+#### Analysis
 
 Table 1: Counts and proportions of liberal and conservative survey respondents to the statement "I consider myself an environmentalist." Data: Andrews et al. (2019)
 ```{r, warnings = FALSE, echo = FALSE}
@@ -73,9 +76,10 @@ survey_tidy=tidy(survey_chisq)
 
 ```
 
+#### Summary
 A majority of liberal respondents (53.73%, n=281) identified as an environmentalist, while a majority of conservative respondents (50.24%, n=318) did not. After running a $\chi$^2^ test, we find that there is a significant association between survey respondents' political affiliation and whether they identify as environmentalists ($\chi$^2^(`r survey_tidy$parameter`) = `r round(survey_tidy$statistic,2)`, *p* = `r signif(survey_tidy$p.value, 3)`). These results indicate that liberals are more likely to identify as environmentalists than conservatives are. 
 
 
-Data: 
+#### Data
 
 Andrews Forest LTER Site and C. Batavia. 2019. Influences on charitable giving for conservation: Online survey data of 1,331 respondents across the US, August 2017 ver 3. Environmental Data Initiative. https://doi.org/10.6073/pasta/926e6270e324a1322a900da14d38b96c
